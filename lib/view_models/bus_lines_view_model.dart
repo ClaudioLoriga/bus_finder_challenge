@@ -9,7 +9,7 @@ class BusLinesViewModel {
 
   Stream<List<BusLine>> get busLinesStream => _busLinesController.stream;
 
-  LineeViewModel() {
+  BusLinesViewModel() {
     _loadBusLines();
   }
 
