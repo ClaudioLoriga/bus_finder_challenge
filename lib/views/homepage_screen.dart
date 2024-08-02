@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../models/line.dart';
 import '../view_models/bus_lines_view_model.dart';
-import '../model/bus_line.dart';
+import '../models/vehicle_id_schema.dart';
 
 class HomepageScreen extends StatelessWidget {
   final BusLinesViewModel viewModel = BusLinesViewModel();
@@ -20,17 +21,17 @@ class HomepageScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder<List<BusLine>>(
+      body: StreamBuilder<List<Line>>(
         stream: viewModel.busLinesStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.separated(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                BusLine busStop = snapshot.data![index];
+                Line busLine = snapshot.data![index];
                 return ListTile(
                   leading: Icon(Icons.directions_outlined, color: Colors.blue),
-                  title: Text('Linea ${busStop.label}'),
+                  title: Text('Linea ${busLine.trip?.routeId}'),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
                     // Handle tap on bus stop

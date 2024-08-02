@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
-import '../model/bus_line.dart';
+import '../models/line.dart';
+import '../models/vehicle_id_schema.dart';
 
 class BusLinesViewModel {
-  final _busLinesController = StreamController<List<BusLine>>.broadcast();
+  final _busLinesController = StreamController<List<Line>>.broadcast();
   final Dio _dio = Dio();
-  final String _apiUrl = 'https://stage-bus-finder.greensharelab.com/api/v1/bus_list/';
+  final String _apiUrl = 'https://stage-bus-finder.greensharelab.com/api/v1/real_time_lines/';
 
-  Stream<List<BusLine>> get busLinesStream => _busLinesController.stream;
+  Stream<List<Line>> get busLinesStream => _busLinesController.stream;
 
   BusLinesViewModel() {
     _loadBusLines();
@@ -18,11 +19,7 @@ class BusLinesViewModel {
       final response = await _dio.get(_apiUrl);
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
-        final busLines = data.map((json) => BusLine(
-          json['vehicle_id'],
-          json['vehicle_label'],
-          json['is_active']
-        )).toList();
+        final busLines = data.map((json) => Line.fromJson(json)).toList();
         _busLinesController.add(busLines);
       } else {
         throw Exception('Failed to load bus stops');
