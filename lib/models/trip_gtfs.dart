@@ -25,15 +25,4 @@ class TripGTFS {
       shapeId: json['shape_id'],
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'route_id': routeId,
-      'service_id': serviceId,
-      'trip_id': tripId,
-      'trip_headsign': tripHeadsign,
-      'direction_id': directionId,
-      'shape_id': shapeId,
-    };
-  }
 }

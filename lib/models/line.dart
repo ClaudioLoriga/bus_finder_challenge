@@ -18,12 +18,4 @@ class Line {
       startDate: json['start_date'],
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'trip': trip?.toJson(),
-      'start_time': startTime,
-      'start_date': startDate,
-    };
-  }
 }
