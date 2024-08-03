@@ -32,7 +32,7 @@ class HomepageScreen extends StatelessWidget {
                 Line busLine = snapshot.data![index];
                 return ListTile(
                   leading: Icon(Icons.directions_outlined, color: Colors.blue),
-                  title: Text('Linea ${busLine.trip?.routeId}'),
+                  title: Text('Linea ${busLine.trip?.routeId.replaceAll('_', ' ')}'),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
                     Navigator.push(

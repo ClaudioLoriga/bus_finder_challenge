@@ -52,10 +52,11 @@ class _BusLineDetailScreenState extends State<BusLineDetailScreen> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(widget.routeId!),
+        title: Text(widget.routeId!.replaceAll('_', ' ')),
         actions: [
           TextButton(
-            child: Text('Mappa', style: TextStyle(color: Colors.blue)),
+            child:
+            Text('Mappa', style: TextStyle(color: Colors.blue)),
             onPressed: () {
               // Implement map functionality
             },
@@ -101,7 +102,7 @@ class _BusLineDetailScreenState extends State<BusLineDetailScreen> {
                   _selectedDirectionKey = entry.key;
                 });
               },
-              child: Text(entry.value.destinationCapolineaId),
+              child: Text(entry.key.substring(0, entry.key.indexOf('_'))),
             ),
           );
         }).toList(),
@@ -133,8 +134,7 @@ class _BusLineDetailScreenState extends State<BusLineDetailScreen> {
     return _buildStopsList(selectedDirection.stops, selectedDirection.busList);
   }
 
-  Widget _buildStopsList(List<DetailedStopSchema> stops,
-      List<DetailedBusSchema> buses) {
+  Widget _buildStopsList(List<DetailedStopSchema> stops, List<DetailedBusSchema> buses) {
     return ListView.builder(
       shrinkWrap: true,
       physics: AlwaysScrollableScrollPhysics(),
@@ -144,73 +144,74 @@ class _BusLineDetailScreenState extends State<BusLineDetailScreen> {
         final isFirstStop = index == 0;
         final isLastStop = index == stops.length - 1;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Stack(
           children: [
-            Row(
+            // Continuous blue line
+            if (!isLastStop)
+              Positioned(
+                left: 19,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  width: 2,
+                  color: Colors.blue,
+                ),
+              ),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 40,
-                  child: Column(
-                    children: [
-                      Container(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 40,
+                      child: Container(
                         width: 12,
                         height: 12,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: isFirstStop || isLastStop
-                              ? Colors.blue
-                              : Colors.white,
+                          color: isFirstStop || isLastStop ? Colors.blue : Colors.white,
                           border: Border.all(color: Colors.blue, width: 2),
                         ),
                       ),
-                      if (!isLastStop)
-                        Container(
-                          width: 2,
-                          height: 40,
-                          color: Colors.blue,
-                        ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        stop.stopName,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            stop.stopName,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          if (stop.capolinea)
+                            Text(
+                              '(${isLastStop ? 'capolinea' : 'capolinea'})',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          SizedBox(height: 8),
+                        ],
                       ),
-                      if (stop.capolinea)
-                        Text(
-                          '(${isFirstStop ? 'fronte scuola' : 'capolinea'})',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      SizedBox(height: 8),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                // Add bus information if available
+                if (!isLastStop)
+                  _buildBusInfo(buses, stop, stops[index + 1]),
+                SizedBox(height: 20), // Add some space between stops
               ],
             ),
-            // Add bus information if available
-            _buildBusInfo(buses, stop,
-                stops[index + 1 < stops.length ? index + 1 : index]),
           ],
         );
       },
     );
   }
 
-  Widget _buildBusInfo(List<DetailedBusSchema> buses,
-      DetailedStopSchema currentStop, DetailedStopSchema nextStop) {
+  Widget _buildBusInfo(List<DetailedBusSchema> buses, DetailedStopSchema currentStop, DetailedStopSchema nextStop) {
     DetailedBusSchema? matchingBus;
 
     try {
       matchingBus = buses.firstWhere(
-            (bus) =>
-        bus.originStopId == currentStop.stopId &&
-            bus.destinationStopId == nextStop.stopId,
+            (bus) => bus.originStopId == currentStop.stopId && bus.destinationStopId == nextStop.stopId,
       );
     } catch (e) {
       // No matching bus found
