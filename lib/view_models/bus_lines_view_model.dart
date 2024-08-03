@@ -22,10 +22,10 @@ class BusLinesViewModel {
         final busLines = data.map((json) => Line.fromJson(json)).toList();
         _busLinesController.add(busLines);
       } else {
-        throw Exception('Failed to load bus stops');
+        throw Exception('Failed to load bus lines');
       }
     } catch (e) {
-      _busLinesController.addError('Error fetching bus stops: $e');
+      _busLinesController.addError('Error fetching bus lines: $e');
     }
   }
 

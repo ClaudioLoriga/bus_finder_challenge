@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/line.dart';
 import '../view_models/bus_lines_view_model.dart';
 import '../models/vehicle_id_schema.dart';
+import 'bus_line_detail_screen.dart';
 
 class HomepageScreen extends StatelessWidget {
   final BusLinesViewModel viewModel = BusLinesViewModel();
@@ -34,8 +35,14 @@ class HomepageScreen extends StatelessWidget {
                   title: Text('Linea ${busLine.trip?.routeId}'),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                    // Handle tap on bus stop
-                  },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BusLineDetailScreen(
+                          routeId: busLine.trip?.routeId,
+                        ),
+                      ),
+                    );                  },
                 );
               },
               separatorBuilder: (context, index) => const Divider(),
