@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/detailed_stop_schema.dart';
 import '../models/detailed_bus_schema.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 
 class RouteMapScreen extends StatefulWidget {
   final List<DetailedStopSchema> stops;
@@ -15,8 +17,32 @@ class RouteMapScreen extends StatefulWidget {
 
 class _RouteMapScreenState extends State<RouteMapScreen> {
   late GoogleMapController mapController;
+
+  //bool _locationPermissionGranted = false;
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeMapRenderer();
+    //_requestLocationPermission();
+  }
+
+  /*Future<void> _requestLocationPermission() async {
+    final status = await Permission.location.request();
+    setState(() {
+      _locationPermissionGranted = status.isGranted;
+    });
+  }*/
+
+  void _initializeMapRenderer() {
+    final GoogleMapsFlutterPlatform mapsImplementation =
+        GoogleMapsFlutterPlatform.instance;
+    if (mapsImplementation is GoogleMapsFlutterAndroid) {
+      mapsImplementation.useAndroidViewSurface = true;
+    }
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -43,7 +69,8 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
         return Marker(
           markerId: MarkerId(bus.busId),
           position: LatLng(bus.position.latitude, bus.position.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           infoWindow: InfoWindow(title: 'Bus ${bus.busId}'),
         );
       }));
@@ -51,8 +78,9 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
   }
 
   void _drawRouteLine() {
-    final List<LatLng> polylineCoordinates = widget.stops.map((stop) =>
-        LatLng(stop.position.latitude, stop.position.longitude)).toList();
+    final List<LatLng> polylineCoordinates = widget.stops
+        .map((stop) => LatLng(stop.position.latitude, stop.position.longitude))
+        .toList();
 
     setState(() {
       _polylines.add(Polyline(
@@ -67,22 +95,22 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Route Map'),
-      ),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(widget.stops.first.position.latitude, widget.stops.first.position.longitude),
-            zoom: 13,
-          ),
-          markers: _markers,
-          polylines: _polylines,
+        appBar: AppBar(
+          title: Text('Route Map'),
         ),
-      ),
-    );
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(widget.stops.first.position.latitude,
+                  widget.stops.first.position.longitude),
+              zoom: 13,
+            ),
+            markers: _markers,
+            polylines: _polylines,
+          ),
+        ));
   }
 }
