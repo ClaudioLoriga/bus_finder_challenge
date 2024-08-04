@@ -1,4 +1,5 @@
 import 'package:bus_finder_challenge/models/detailed_stop_schema.dart';
+import 'package:bus_finder_challenge/views/route_map_detail_screen.dart';
 import 'package:flutter/material.dart';
 import '../models/detailed_bus_schema.dart';
 import '../models/direction.dart';
@@ -55,10 +56,19 @@ class _BusLineDetailScreenState extends State<BusLineDetailScreen> {
         title: Text(widget.routeId!.replaceAll('_', ' ')),
         actions: [
           TextButton(
-            child:
-            Text('Mappa', style: TextStyle(color: Colors.blue)),
+            child: Text('Mappa', style: TextStyle(color: Colors.blue)),
             onPressed: () {
-              // Implement map functionality
+              if (_viewModel.routeDetail != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RouteMapScreen(
+                      stops: _viewModel.routeDetail!.directions[_selectedDirectionKey]!.stops,
+                      buses: _viewModel.routeDetail!.directions[_selectedDirectionKey]!.busList,
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ],
