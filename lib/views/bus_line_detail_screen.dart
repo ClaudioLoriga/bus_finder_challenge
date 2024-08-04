@@ -63,6 +63,7 @@ class _BusLineDetailScreenState extends State<BusLineDetailScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => RouteMapScreen(
+                      routeId: widget.routeId!,
                       stops: _viewModel.routeDetail!.directions[_selectedDirectionKey]!.stops,
                       buses: _viewModel.routeDetail!.directions[_selectedDirectionKey]!.busList,
                     ),

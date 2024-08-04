@@ -6,10 +6,11 @@ import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platf
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 
 class RouteMapScreen extends StatefulWidget {
+  final String routeId;
   final List<DetailedStopSchema> stops;
   final List<DetailedBusSchema> buses;
 
-  RouteMapScreen({required this.stops, required this.buses});
+  RouteMapScreen({required this.routeId,required this.stops, required this.buses});
 
   @override
   _RouteMapScreenState createState() => _RouteMapScreenState();
@@ -95,22 +96,40 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Route Map'),
-        ),
-        body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(widget.stops.first.position.latitude,
-                  widget.stops.first.position.longitude),
-              zoom: 13,
-            ),
-            markers: _markers,
-            polylines: _polylines,
+      appBar: AppBar(
+        title: Text('${widget.routeId.replaceAll('_', ' ')} - Mappa'),
+      ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: GoogleMap(
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(widget.stops.first.position.latitude,
+                widget.stops.first.position.longitude),
+            zoom: 13,
           ),
-        ));
+          markers: _markers,
+          polylines: _polylines,
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions),
+            label: 'Linee',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions_bus),
+            label: 'Mezzi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pin_drop),
+            label: 'Vicino a te',
+          ),
+        ],
+      ),
+    );
   }
 }
