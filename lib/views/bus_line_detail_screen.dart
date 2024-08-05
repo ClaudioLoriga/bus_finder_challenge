@@ -113,7 +113,7 @@ class _BusLineDetailScreenState extends State<BusLineDetailScreen> {
     }
 
     return SizedBox(
-      height: 50,
+      height: height50,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: routeDetail.directions.entries.map((entry) {

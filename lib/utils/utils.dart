@@ -8,6 +8,7 @@ const double heigth8 = 8;
 const double heigth12 = 12;
 const double heigth16 = 16;
 const double heigth20 = 20;
+const double height50 = 50;
 
 const double width2 = 2;
 const double width4 = 4;
@@ -35,3 +36,4 @@ const String capolinea = "capolinea";
 const String linea = "Linea";
 const String bus = "bus";
 const String inOrario = "(in orario)";
+const String route = "route";

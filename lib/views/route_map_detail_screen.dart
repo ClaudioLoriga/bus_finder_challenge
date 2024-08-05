@@ -78,7 +78,7 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
 
     setState(() {
       _polylines.add(Polyline(
-        polylineId: const PolylineId('route'),
+        polylineId: const PolylineId(route),
         color: Colors.blue,
         points: polylineCoordinates,
         width: 5,
