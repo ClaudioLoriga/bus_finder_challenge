@@ -1,4 +1,4 @@
-import 'package:bus_finder_challenge/models/position.dart';
+import 'position.dart';
 
 class DetailedStopSchema {
   final bool capolinea;

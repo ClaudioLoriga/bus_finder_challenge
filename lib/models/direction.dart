@@ -1,5 +1,5 @@
-import 'package:bus_finder_challenge/models/detailed_bus_schema.dart';
-import 'package:bus_finder_challenge/models/detailed_stop_schema.dart';
+import 'detailed_bus_schema.dart';
+import 'detailed_stop_schema.dart';
 
 class Direction {
   final String departureCapolineaId;

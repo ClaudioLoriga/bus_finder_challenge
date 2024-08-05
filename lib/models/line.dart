@@ -1,4 +1,4 @@
-import 'package:bus_finder_challenge/models/trip_gtfs.dart';
+import 'trip_gtfs.dart';
 
 class Line {
   final TripGTFS? trip;

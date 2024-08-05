@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bus_finder_challenge/utils/utils.dart';
+import '../utils/utils.dart';
 import 'package:dio/dio.dart';
 import '../models/route_detail.dart';
 

@@ -1,5 +1,4 @@
-// bus_lines_screen.dart
-import 'package:bus_finder_challenge/utils/utils.dart';
+import '../utils/utils.dart';
 import 'package:flutter/material.dart';
 import '../models/line.dart';
 import '../view_models/bus_lines_view_model.dart';

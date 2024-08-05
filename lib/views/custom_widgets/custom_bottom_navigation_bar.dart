@@ -1,4 +1,3 @@
-// custom_bottom_navigation_bar.dart
 import 'package:flutter/material.dart';
 
 import '../../utils/utils.dart';
