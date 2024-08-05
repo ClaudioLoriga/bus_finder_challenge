@@ -1,31 +1,38 @@
-import 'package:bus_finder_challenge/models/route_detail.dart';
+import 'dart:async';
+import 'package:bus_finder_challenge/utils/utils.dart';
 import 'package:dio/dio.dart';
+import '../models/route_detail.dart';
 
 class BusLineDetailViewModel {
   final String? routeId;
-  RouteDetail? _routeDetail;
+  final _routeDetailController = StreamController<RouteDetail>.broadcast();
   final Dio _dio = Dio();
-  final String _apiUrl =
-      'https://stage-bus-finder.greensharelab.com/api/v1/route_detail/';
 
-  RouteDetail? get routeDetail => _routeDetail;
+  Stream<RouteDetail> get routeDetailStream => _routeDetailController.stream;
 
-  BusLineDetailViewModel(this.routeId);
+  BusLineDetailViewModel(this.routeId) {
+    loadRouteDetail();
+  }
 
-  Future<void> fetchRouteDetail() async {
+  Future<void> loadRouteDetail() async {
     try {
       final response = await _dio.post(
-        _apiUrl,
-        data: {"route_id": routeId},
+        routeDetailApiString,
+        data: {routeIdJsonPlaceholder: routeId},
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == succcessState) {
         final data = response.data;
-        _routeDetail = RouteDetail.fromJson(data);
+        final routeDetail = RouteDetail.fromJson(data);
+        _routeDetailController.add(routeDetail);
       } else {
-        throw Exception('Failed to load route detail');
+        throw Exception(routeDetailLoadFail);
       }
     } catch (e) {
-      throw Exception('Error fetching bus lines: $e');
+      _routeDetailController.addError('$routeDetailLoadFail $e');
     }
+  }
+
+  void dispose() {
+    _routeDetailController.close();
   }
 }

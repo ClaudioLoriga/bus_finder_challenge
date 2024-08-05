@@ -5,6 +5,9 @@ import '../models/detailed_bus_schema.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 
+import '../utils/utils.dart';
+import 'custom_widgets/custom_bottom_navigation_bar.dart';
+
 class RouteMapScreen extends StatefulWidget {
   final String routeId;
   final List<DetailedStopSchema> stops;
@@ -18,8 +21,6 @@ class RouteMapScreen extends StatefulWidget {
 
 class _RouteMapScreenState extends State<RouteMapScreen> {
   late GoogleMapController mapController;
-
-  //bool _locationPermissionGranted = false;
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
 
@@ -27,15 +28,7 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
   void initState() {
     super.initState();
     _initializeMapRenderer();
-    //_requestLocationPermission();
   }
-
-  /*Future<void> _requestLocationPermission() async {
-    final status = await Permission.location.request();
-    setState(() {
-      _locationPermissionGranted = status.isGranted;
-    });
-  }*/
 
   void _initializeMapRenderer() {
     final GoogleMapsFlutterPlatform mapsImplementation =
@@ -72,7 +65,7 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
           position: LatLng(bus.position.latitude, bus.position.longitude),
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          infoWindow: InfoWindow(title: 'Bus ${bus.busId}'),
+          infoWindow: InfoWindow(title: '$bus ${bus.busId}'),
         );
       }));
     });
@@ -85,7 +78,7 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
 
     setState(() {
       _polylines.add(Polyline(
-        polylineId: PolylineId('route'),
+        polylineId: const PolylineId('route'),
         color: Colors.blue,
         points: polylineCoordinates,
         width: 5,
@@ -97,7 +90,7 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.routeId.replaceAll('_', ' ')} - Mappa'),
+        title: Text('${widget.routeId.replaceAll('_', ' ')} - $mappa'),
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height,
@@ -113,22 +106,17 @@ class _RouteMapScreenState extends State<RouteMapScreen> {
           polylines: _polylines,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: 0,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions),
-            label: 'Linee',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_bus),
-            label: 'Mezzi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pin_drop),
-            label: 'Vicino a te',
-          ),
-        ],
+        onTap: (index) {
+          // Handle navigation here
+          if (index != 0) {
+            // Navigate to other screens or show a placeholder
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text(featureNotImplementedYet)),
+            );
+          }
+        },
       ),
     );
   }
