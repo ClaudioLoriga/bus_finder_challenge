@@ -1,8 +1,10 @@
+// homepage_screen.dart
+import 'package:bus_finder_challenge/utils/utils.dart';
 import 'package:flutter/material.dart';
 import '../models/line.dart';
 import '../view_models/bus_lines_view_model.dart';
-import '../models/vehicle_id_schema.dart';
 import 'bus_line_detail_screen.dart';
+import 'custom_widgets/custom_bottom_navigation_bar.dart';
 
 class HomepageScreen extends StatelessWidget {
   final BusLinesViewModel viewModel = BusLinesViewModel();
@@ -11,13 +13,13 @@ class HomepageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Linee'),
+        title: const Text(linesLabel),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {},
           ),
         ],
@@ -31,9 +33,9 @@ class HomepageScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 Line busLine = snapshot.data![index];
                 return ListTile(
-                  leading: Icon(Icons.directions_outlined, color: Colors.blue),
-                  title: Text('Linea ${busLine.trip?.routeId.replaceAll('_', ' ')}'),
-                  trailing: Icon(Icons.chevron_right),
+                  leading: const Icon(Icons.directions_outlined, color: Colors.blue),
+                  title: Text('$linea ${busLine.trip?.routeId.replaceAll('_', ' ')}'),
+                  trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -42,34 +44,30 @@ class HomepageScreen extends StatelessWidget {
                           routeId: busLine.trip?.routeId,
                         ),
                       ),
-                    );                  },
+                    );
+                  },
                 );
               },
               separatorBuilder: (context, index) => const Divider(),
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('$error ${snapshot.error}'));
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: 0,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions),
-            label: 'Linee',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_bus),
-            label: 'Mezzi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pin_drop),
-            label: 'Vicino a te',
-          ),
-        ],
+        onTap: (index) {
+          // Handle navigation here
+          if (index != 0) {
+            // Navigate to other screens or show a placeholder
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text(featureNotImplementedYet)),
+            );
+          }
+        },
       ),
     );
   }
